@@ -7,7 +7,11 @@ const HeaderOne = ({ width, children }) => {
         <View style={{ alignItems: 'baseline' }}>
             <View style={AppStyles.headerOneContainer}>
                 <Text style={{ ...AppStyles.headerOne}}>{children}</Text>
-                <Box  marginLeft={6} marginBottom={6} padding={"1px"} bg={"black"} width={width}></Box>
+                {
+                    width &&(
+                        <Box  marginLeft={6} marginBottom={6} padding={"1px"} bg={"black"} width={width}></Box>
+                    )
+                }
             </View>
         </View>
 

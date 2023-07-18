@@ -1,27 +1,113 @@
-import React from 'react'
-import { NativeBaseProvider, Box , Text, Image, Button} from "native-base";
+import React, { useState } from 'react'
+import { NativeBaseProvider, Box, Text, Image, Button, Center } from "native-base";
 import { StyleSheet, View, Pressable } from 'react-native';
 import HeaderOne from '../components/basics/headerOne';
+import MyInput from '../components/basics/myInput';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Controller, useForm } from 'react-hook-form';
+import Loader from '../components/basics/loader';
+import authApi from '../api/authApi';
+import { useMutation } from 'react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import InputHookForm from '../components/basics/InputHookForm';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
-import MyInput from '../components/basics/input';
-
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch
+  } = useForm({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  })
+  const onSubmit = (data) => {
+    setLoading(true)
+    loginMutation.mutate(data);
+  }
+  
+  const loginMutation = useMutation(
+    (userData) => authApi.login(userData),
+    {
+      onSuccess: (data) => {
+        console.log(data,"onSuccess")
+        if(data.token){
+          AsyncStorage.setItem('token', data.token).then(() => {
+            console.log('Token sauvegardé avec succès !');
+          });
+        }else if(data.code =="401"){
+          Toast.show({
+            type: 'error',
+            text1: 'Identifiants invalide !',
+          });
+        }else{
+          Toast.show({
+            type: 'error',
+            text1: 'Erreur',
+          });
+        }
+       setLoading(false);
+      },
+      onError: (error) => {
+        setLoading(false);
+        alert(
+          "Nous sommes navré, mais l'application a rencontré un problème !"
+        );
+      },
+    }
+  );
   return (
-    <Box style={styles.container}>
-        <Image 
-        source={require('./../assets/img/home-illustration.png')}
-        width={"100%"} 
-        height={"50%"} 
-        alt={"2 children"}
-        />
-        
-        <HeaderOne width={40}>Je me connecte</HeaderOne>
-        <Box style={{width:"90%"}}>
-          <MyInput placeholder='anouar@hotmail.com'/>
-          <MyInput placeholder='*********'/>
-          <Button>Connexion</Button>
-        </Box>
-    </Box>
+    <KeyboardAwareScrollView >
+           <Toast />
+      <Box style={styles.container}>
+        <Center>
+          <Box style={{ marginTop: "30%" }}>
+            <Image
+              source={require('./../assets/img/home-illustration.png')}
+              alt={"2 children"}
+              height={"100%"}
+            />
+          </Box>
+          <HeaderOne width={40}>Je me connecte</HeaderOne>
+          <Box style={{ width: "90%" }}>
+            {errors.username && <Text  style={{color:"secondary.800"}}>Ce champs est obligatoire.</Text>}
+            <InputHookForm control={control} name={"username"} placeholder={"Votre email"} />
+
+            {errors.password && <Text style={{color:"red"}}>Ce champs est obligatoire.</Text>}
+
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <MyInput
+                  placeholder="***************"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  type="password"
+                  bg={errors.password && "#E6B0AA" }
+                />
+              )}
+              name="password"
+            />
+            {loading ?
+              <Loader />
+              : (
+                <Button onPress={handleSubmit(onSubmit)} >Connexion</Button>
+              )
+            }
+          </Box>
+          <Box marginTop={4}marginBottom={4} padding={"0.5px"} bg={"black"} width={"90%"}></Box>
+          <Button   onPress={() => navigation.navigate('register')} bg="secondary.800" width={"90%"}>S'inscire</Button>
+        </Center>
+      </Box>
+    </KeyboardAwareScrollView>
   )
 }
 
@@ -31,7 +117,5 @@ export default LoginScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
 })
