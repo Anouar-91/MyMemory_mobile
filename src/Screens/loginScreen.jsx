@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { NativeBaseProvider, Box, Text, Image, Button, Center } from "native-base";
+import { Box, Text, Image, Button, Center } from "native-base";
 import { StyleSheet, View, Pressable } from 'react-native';
 import HeaderOne from '../components/basics/headerOne';
-import MyInput from '../components/basics/myInput';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Controller, useForm } from 'react-hook-form';
 import Loader from '../components/basics/loader';
@@ -29,28 +28,28 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true)
     loginMutation.mutate(data);
   }
-  
+
   const loginMutation = useMutation(
     (userData) => authApi.login(userData),
     {
       onSuccess: (data) => {
-        console.log(data,"onSuccess")
-        if(data.token){
+        console.log(data, "onSuccess")
+        if (data.token) {
           AsyncStorage.setItem('token', data.token).then(() => {
             console.log('Token sauvegardé avec succès !');
           });
-        }else if(data.code =="401"){
+        } else if (data.code == "401") {
           Toast.show({
             type: 'error',
             text1: 'Identifiants invalide !',
           });
-        }else{
+        } else {
           Toast.show({
             type: 'error',
             text1: 'Erreur',
           });
         }
-       setLoading(false);
+        setLoading(false);
       },
       onError: (error) => {
         setLoading(false);
@@ -61,53 +60,39 @@ const LoginScreen = ({ navigation }) => {
     }
   );
   return (
-    <KeyboardAwareScrollView >
-           <Toast />
-      <Box style={styles.container}>
-        <Center>
-          <Box style={{ marginTop: "30%" }}>
-            <Image
-              source={require('./../assets/img/home-illustration.png')}
-              alt={"2 children"}
-              height={"100%"}
-            />
-          </Box>
-          <HeaderOne width={40}>Je me connecte</HeaderOne>
-          <Box style={{ width: "90%" }}>
-            {errors.username && <Text  style={{color:"secondary.800"}}>Ce champs est obligatoire.</Text>}
-            <InputHookForm control={control} name={"username"} placeholder={"Votre email"} />
+    <>
+      <Toast />
 
-            {errors.password && <Text style={{color:"red"}}>Ce champs est obligatoire.</Text>}
+      <KeyboardAwareScrollView >
+        <Box style={styles.container}>
+          <Center>
+            <Box style={{ marginTop: "30%" }}>
+              <Image
+                source={require('./../assets/img/home-illustration.png')}
+                alt={"2 children"}
+                height={"100%"}
+              />
+            </Box>
+            <HeaderOne width={40}>Je me connecte</HeaderOne>
+            <Box style={{ width: "90%" }}>
+              {errors.username && <Text style={{ color: "secondary.800" }}>Ce champs est obligatoire.</Text>}
+              <InputHookForm isError={errors.username} control={control} name={"username"} placeholder={"Votre email"} />
+              <InputHookForm isError={errors.password} control={control} name={"password"} placeholder={"********"} />
 
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <MyInput
-                  placeholder="***************"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  type="password"
-                  bg={errors.password && "#E6B0AA" }
-                />
-              )}
-              name="password"
-            />
-            {loading ?
-              <Loader />
-              : (
-                <Button onPress={handleSubmit(onSubmit)} >Connexion</Button>
-              )
-            }
-          </Box>
-          <Box marginTop={4}marginBottom={4} padding={"0.5px"} bg={"black"} width={"90%"}></Box>
-          <Button   onPress={() => navigation.navigate('register')} bg="secondary.800" width={"90%"}>S'inscire</Button>
-        </Center>
-      </Box>
-    </KeyboardAwareScrollView>
+              
+              {loading ?
+                <Loader />
+                : (
+                  <Button onPress={handleSubmit(onSubmit)} >Connexion</Button>
+                )
+              }
+            </Box>
+            <Box marginTop={4} marginBottom={4} padding={"0.5px"} bg={"black"} width={"90%"}></Box>
+            <Button onPress={() => navigation.navigate('register')} bg="secondary.800" width={"90%"}>S'inscire</Button>
+          </Center>
+        </Box>
+      </KeyboardAwareScrollView>
+    </>
   )
 }
 
