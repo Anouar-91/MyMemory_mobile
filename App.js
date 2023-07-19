@@ -18,9 +18,9 @@ export default function App() {
       <NavigationContainer style={styles.container}>
         <QueryClientProvider client={queryClient}>
           <Stack.Navigator initialRouteName="login">
-            <Stack.Screen name="login" component={LoginScreen}  options={{ headerShown: false }} />
-            <Stack.Screen name="register" component={RegisterScreen}  options={{ headerShown: false }}/>
-            <Stack.Screen name="listWordScreen" component={ListWordScreen}  options={{ headerShown: false }}/>
+            <Stack.Screen name="login" component={LoginScreen}  options={{title: "Connexion"}} />
+            <Stack.Screen name="register" component={RegisterScreen}  options={{ title: "Inscription" }}/>
+            <Stack.Screen name="listWordScreen" component={ListWordScreen}  options={{headerShown: false}}/>
           </Stack.Navigator>
         </QueryClientProvider>
       </NavigationContainer>
