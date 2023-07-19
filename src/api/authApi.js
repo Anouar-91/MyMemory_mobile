@@ -23,11 +23,28 @@ async function register(userRegister) {
     },
     body: JSON.stringify(userRegister),
   }).then((res) => res.json());
+  console.log(response, "la")
   return response;
+}
+
+async function isAuthenticated() {
+  const token = await AsyncStorage.getItem('token');
+
+    if (token) {
+      const jwtData = jwtDecode<any>(token);
+      if (jwtData.exp * 1000 > new Date().getTime()) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
 }
 
 
 export default {
   login,
-  register
+  register,
+  isAuthenticated
 };

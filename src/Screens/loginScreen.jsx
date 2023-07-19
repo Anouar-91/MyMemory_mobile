@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Text, Image, Button, Center } from "native-base";
 import { StyleSheet, View, Pressable } from 'react-native';
 import HeaderOne from '../components/basics/headerOne';
@@ -12,6 +12,11 @@ import InputHookForm from '../components/basics/InputHookForm';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 const LoginScreen = ({ navigation }) => {
+  useEffect(() => {
+      if(authApi.isAuthenticated()){
+        navigation.navigate('listWordScreen')
+      }
+  })
   const [loading, setLoading] = useState(false);
   const {
     control,
@@ -41,13 +46,13 @@ const LoginScreen = ({ navigation }) => {
           Toast.show({
             type: 'success',
             text1: 'Connexion réussi !',
-            position: 'bottom',
+            position: 'top',
           });
         } else if (data.code == "401") {
           Toast.show({
             type: 'error',
             text1: 'Identifiants invalide !',
-            position: 'bottom',
+            position: 'top',
 
           });
         } else {
