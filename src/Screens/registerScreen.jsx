@@ -22,7 +22,6 @@ const RegisterScreen = ({ navigation }) => {
   } = useForm()
   const onSubmit = (data) => {
     if (data.password != data.confirmPassword) {
-      console.log(data.password,data.confirmPassword)
       Toast.show({
         type: 'error',
         text1: 'Les mots de passe doivent correspondre.',
@@ -47,7 +46,7 @@ const RegisterScreen = ({ navigation }) => {
           Toast.show({
             type: 'error',
             text1: 'Cet email est déjà utilisé !',
-            position: 'bottom',
+            position: 'top',
             style: {
               zIndex: 99999999999, // Valeur de zIndex élevée pour afficher le toast au-dessus de tout
             },
@@ -59,7 +58,7 @@ const RegisterScreen = ({ navigation }) => {
             type: 'success',
             text1: 'Inscription avec succès !',
             text2: "Vous pouvez vous connecter",
-            position: 'bottom',
+            position: 'top',
           });
         }
       },
