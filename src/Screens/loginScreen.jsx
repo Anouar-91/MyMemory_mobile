@@ -33,15 +33,22 @@ const LoginScreen = ({ navigation }) => {
     (userData) => authApi.login(userData),
     {
       onSuccess: (data) => {
-        console.log(data, "onSuccess")
         if (data.token) {
           AsyncStorage.setItem('token', data.token).then(() => {
             console.log('Token sauvegardé avec succès !');
+          });
+          navigation.navigate("listWordScreen")
+          Toast.show({
+            type: 'success',
+            text1: 'Connexion réussi !',
+            position: 'bottom',
           });
         } else if (data.code == "401") {
           Toast.show({
             type: 'error',
             text1: 'Identifiants invalide !',
+            position: 'bottom',
+
           });
         } else {
           Toast.show({
@@ -75,11 +82,8 @@ const LoginScreen = ({ navigation }) => {
             </Box>
             <HeaderOne width={40}>Je me connecte</HeaderOne>
             <Box style={{ width: "90%" }}>
-              {errors.username && <Text style={{ color: "secondary.800" }}>Ce champs est obligatoire.</Text>}
               <InputHookForm isError={errors.username} control={control} name={"username"} placeholder={"Votre email"} />
               <InputHookForm isError={errors.password} control={control} name={"password"} placeholder={"********"} />
-
-              
               {loading ?
                 <Loader />
                 : (

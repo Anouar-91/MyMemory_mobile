@@ -1,8 +1,8 @@
-import jwtDecode from "jwt-decode";
+import Constants from 'expo-constants';
 
 async function login(userData) {
   const response = await fetch(
-    "https://mymemory-api.fr/api/" + "login_check",
+    Constants.manifest.extra.API_URL + "login_check",
     {
       method: "POST",
       headers: {
@@ -17,7 +17,7 @@ async function login(userData) {
 
 async function register(userRegister) {
   console.log(userRegister, "la")
-  const response = await fetch("https://mymemory-api.fr/api/"+ "users", {
+  const response = await fetch(Constants.manifest.extra.API_URL+ "users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

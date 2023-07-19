@@ -7,6 +7,7 @@ import theme from "./src/assets/style/theme"
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RegisterScreen from './src/screens/registerScreen';
+import ListWordScreen from './src/screens/listWordScreen';
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ export default function App() {
           <Stack.Navigator initialRouteName="login">
             <Stack.Screen name="login" component={LoginScreen}  options={{ headerShown: false }} />
             <Stack.Screen name="register" component={RegisterScreen}  options={{ headerShown: false }}/>
+            <Stack.Screen name="listWordScreen" component={ListWordScreen}  options={{ headerShown: false }}/>
           </Stack.Navigator>
         </QueryClientProvider>
       </NavigationContainer>

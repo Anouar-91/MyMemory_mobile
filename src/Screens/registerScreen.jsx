@@ -54,15 +54,13 @@ const RegisterScreen = ({ navigation }) => {
           });
         }
         if(data.id){
+          navigation.navigate('login')
           Toast.show({
             type: 'success',
             text1: 'Inscription avec succès !',
+            text2: "Vous pouvez vous connecter",
             position: 'bottom',
-            style: {
-              zIndex: 99999999999, // Valeur de zIndex élevée pour afficher le toast au-dessus de tout
-            },
           });
-          navigation.navigate('login')
         }
       },
       onError: (error) => {
