@@ -16,7 +16,6 @@ async function login(userData) {
 }
 
 async function register(userRegister) {
-  console.log(userRegister, "la")
   const response = await fetch(Constants.manifest.extra.API_URL+ "users", {
     method: "POST",
     headers: {
