@@ -7,11 +7,12 @@ const MyButton= (props) => {
     const {
         children,
         onClick,
-        color = "primary"
+        color = "primary",
+        ...buttonProps
     } = props;
 
     return (
-        <Button onPress={onClick} style={color == "primary" ? styles.primary : styles.secondary}>{children}</Button>
+        <Button {...buttonProps } onPress={onClick} style={color == "primary" ? styles.primary : styles.secondary}>{children}</Button>
     )
 }
 

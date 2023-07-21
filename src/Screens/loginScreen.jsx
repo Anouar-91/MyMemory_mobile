@@ -10,13 +10,25 @@ import { useMutation } from 'react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import InputHookForm from '../components/basics/InputHookForm';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import ToastBottom from '../components/toastBottom';
 
 const LoginScreen = ({ navigation }) => {
+
   useEffect(() => {
-      if(authApi.isAuthenticated()){
-        navigation.navigate('listWordScreen')
+    const checkAuthentication = async () => {
+      try {
+        const isAuthenticated = await authApi.isAuthenticated();
+        if (isAuthenticated) {
+          navigation.navigate('listWordScreen');
+        }
+      } catch (error) {
+        console.log(error)
       }
-  })
+    };
+  
+    checkAuthentication();
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const {
     control,
@@ -73,9 +85,12 @@ const LoginScreen = ({ navigation }) => {
   );
   return (
     <>
-      <Toast />
 
       <KeyboardAwareScrollView >
+      <Box style={{  zIndex: 9999, position: "absolute", Top: 10,left: 10, right: 10}}>
+    <Toast />
+</Box>
+
         <Box style={styles.container}>
           <Center>
             <Box style={{ marginTop: "30%" }}>

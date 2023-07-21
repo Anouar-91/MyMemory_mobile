@@ -8,7 +8,9 @@ const InputHookForm = (props) => {
     control,
     name,
     label,
+    required= false,
     isError = false,
+    stylesProps,
     ...inputProps
   } = props;
 
@@ -16,13 +18,13 @@ const InputHookForm = (props) => {
     <Controller
       control={control}
       rules={{
-        required: true,
+        required: required,
       }}
       render={({ field: { onChange, onBlur, value } }) => (
         <Box style={{ marginBottom: 10 }}>
           {label && (<Text style={styles.label}>{label}</Text>)}
           <Input
-            style={{ ...styles.input, backgroundColor: isError ? "#E6B0AA" : "white" }}
+            style={{ ...styles.input, backgroundColor: isError ? "#E6B0AA" : "white", ...stylesProps }}
             {...inputProps}
             onBlur={onBlur}
             onChangeText={onChange}
@@ -44,8 +46,6 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   container: {
-    flex: -1,
-    justifyContent: 'center',
     padding: 8,
     backgroundColor: '#0e101c',
     borderWidth: 1
