@@ -32,9 +32,27 @@ async function post(data) {
   return response;
 }
 
+const get = async (id) => {
+  const token = await AsyncStorage.getItem('token');
+  
+  const response = await fetch(
+    Constants.manifest.extra.API_URL + "en_words/" + id,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return response.json();
+};
+
+
 
 
 export default {
   getCollectionByUser,
-  post
+  post,
+  get
 };

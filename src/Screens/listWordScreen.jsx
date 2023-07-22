@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import { NativeBaseProvider, Box, Text, Center, Button, Input, ScrollView } from "native-base";
+import { Box, Text, Center, Input, ScrollView, Pressable } from "native-base";
 import { StyleSheet } from 'react-native';
 import { useQuery } from 'react-query';
 import EnWordApi from '../api/enWordApi';
 import colors from '../constants/colors';
 import MyButton from '../components/basics/buttonSecondary';
-import InputHookForm from '../components/basics/InputHookForm';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
-import ToastBottom from '../components/toastBottom';
+import Loader from '../components/basics/loader';
 
 const ListWordScreen = ({ navigation }) => {
   const [page, setPage] = useState(1);
@@ -18,12 +17,10 @@ const ListWordScreen = ({ navigation }) => {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        console.log(data)
         if (data["hydra:totalItems"]) {
-          console.log(data, 'success')
         }
         if (data?.code == 401) {
-          //toast.warning("Votre session a expiré ! Veuillez vous reconnecter.");
+          navigation.navigate('login')
         }
       },
       onError: (error) => {
@@ -32,6 +29,11 @@ const ListWordScreen = ({ navigation }) => {
         );
       },
     });
+
+    const goToWordDetail = (id) => {
+      navigation.navigate("enWordDetail", {id: id});
+    }
+  
   return (
     <Box style={styles.container}>
       <Toast />
@@ -44,32 +46,46 @@ const ListWordScreen = ({ navigation }) => {
           <Input width="90%" />
         </Box>
       </Center>
+      {isLoading && (
+        <Center>
+          <Loader/>
+        </Center>
+      )}
       <ScrollView>
-      <Box style={{}}>
-        {data && data["hydra:member"] && data["hydra:member"].map((enWord) => {
-          return (
-            <Box>
-              <Box style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 10 }}>
-                <Box>
-                  <Text>{enWord.content}</Text>
-                </Box>
-                <Box></Box>
-                <Box>
-                  <Text>{enWord.frWords.map((frWord) => {
-                    return(
-                      <Text>{frWord.content},</Text>
-                    )
-                  })}</Text>
-                </Box>
-              </Box>
-              <Center>
-                <Box style={{ width: "90%", padding: 0.5, backgroundColor: "black" }}></Box>
-              </Center>
-            </Box>
-          )
-        })}
+        <Box >
+          {data &&
+            data["hydra:member"] &&
+            data["hydra:member"].map((enWord) => {
+              return (
+                <>
+                <Pressable onPress={() => goToWordDetail(enWord.id)}>
+                  <Box key={enWord.id} style={styles.wordContainer}>
+                    <Box style={styles.leftText}>
+                      <Text>{enWord.content}</Text>
+                    </Box>
+                    <Box style={styles.rightText}>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        <Text>
+                          {enWord.frWords.map((frWord, index) => {
+                            // Add a comma after each translation except for the last one
+                            return (
+                              <Text key={frWord.id}>
+                                {frWord.content}
+                                {index !== enWord.frWords.length - 1 ? ", " : ""}
+                              </Text>
+                            );
+                          })}
+                        </Text>
+                      </ScrollView>
+                    </Box>
+                  </Box>
+                  </Pressable>
+                  <Box style={{ padding: 0.5, backgroundColor: "black", width: "90%" }}></Box>
+                </>
 
-      </Box>
+              );
+            })}
+        </Box>
       </ScrollView>
 
 
@@ -86,6 +102,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: "15%",
+    paddingHorizontal: 10, // Add horizontal padding
+    justifyContent: "center", // Center the content vertically
+
   },
   headerBox: {
     padding: 10,
@@ -99,5 +118,23 @@ const styles = StyleSheet.create({
   title: {
     color: "white",
     fontWeight: "bold"
-  }
+  },
+  wordContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+    // Add the following styles to prevent overflow and word wrapping
+    flexWrap: "wrap",
+    overflow: "hidden",
+  },
+  leftText: {
+    flex: 1, // Take up the available space in the row
+    textAlign: "center", // Center the text horizontally
+
+  },
+  rightText: {
+    flex: 1, // Take up the available space in the row
+    textAlign: "center", // Align text to the right
+  },
 })
