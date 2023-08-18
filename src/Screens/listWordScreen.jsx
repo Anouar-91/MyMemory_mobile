@@ -52,7 +52,7 @@ const ListWordScreen = ({ navigation }) => {
         </Center>
       )}
       <ScrollView>
-        <Box >
+        <Box>
           {data &&
             data["hydra:member"] &&
             data["hydra:member"].map((enWord) => {
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   headerBox: {
     padding: 10,
-    width: "90%",
+    width: "98%",
     borderRadius: "5px",
     backgroundColor: colors.primary,
     flexDirection: "row",
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 10,
-    // Add the following styles to prevent overflow and word wrapping
     flexWrap: "wrap",
     overflow: "hidden",
   },
