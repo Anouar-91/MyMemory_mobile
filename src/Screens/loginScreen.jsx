@@ -25,7 +25,7 @@ const LoginScreen = ({ navigation }) => {
         console.log(error)
       }
     };
-  
+
     checkAuthentication();
   }, []);
 
@@ -87,9 +87,9 @@ const LoginScreen = ({ navigation }) => {
     <>
 
       <KeyboardAwareScrollView >
-      <Box style={{  zIndex: 9999, position: "absolute", Top: 10,left: 10, right: 10}}>
-    <Toast />
-</Box>
+        <Box style={{ zIndex: 9999, position: "absolute", Top: 10, left: 10, right: 10 }}>
+          <Toast />
+        </Box>
 
         <Box style={styles.container}>
           <Center>
