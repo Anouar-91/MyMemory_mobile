@@ -20,7 +20,6 @@ const ListWordScreen = ({ navigation }) => {
   const newLimit = () => {
     setLoadingNewWord(true)
     setLimit(limit + 30)
-    scrollViewRef.current.scrollToEnd();
   }
 
   const { isLoading, error, data, isError, isPreviousData, refetch } =
@@ -30,7 +29,7 @@ const ListWordScreen = ({ navigation }) => {
       onSuccess: (data) => {
         if (data["hydra:totalItems"]) {
           setLoadingNewWord(false)
-
+          scrollViewRef.current.scrollToEnd();
         }
         if (data?.code == 401) {
           navigation.navigate('login')
